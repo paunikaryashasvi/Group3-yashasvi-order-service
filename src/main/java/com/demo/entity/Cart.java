@@ -1,6 +1,7 @@
 package com.demo.entity;
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -8,6 +9,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
@@ -26,15 +30,15 @@ public class Cart {
     @Column(unique = true)
     private String key;
 
-//    @ManyToOne
-//    @JoinColumn
-//    private Customer customer;
+    @ManyToOne
+    @JoinColumn
+    private Customer customer;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
-//    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
-//    private Set<LineItem> lineItems = new HashSet<>();
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+    private Set<LineItem> lineItems = new HashSet<>();
 
     private double totalPrice;
 
@@ -93,6 +97,22 @@ public class Cart {
 
 	public void setCartStatus(CartStatus cartStatus) {
 		this.cartStatus = cartStatus;
+	}
+
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
+
+	public Set<LineItem> getLineItems() {
+		return lineItems;
+	}
+
+	public void setLineItems(Set<LineItem> lineItems) {
+		this.lineItems = lineItems;
 	}
 
     // Other cart-related fields if needed

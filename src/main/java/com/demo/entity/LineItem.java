@@ -25,6 +25,15 @@ public class LineItem {
     private int quantity;
 
     private double totalPrice;
+    
+    @ManyToOne
+    @JoinColumn
+    private Order order;
+//
+    @ManyToOne
+    @JoinColumn
+    private Cart cart;
+
 
 	public LineItem() {
 		super();
@@ -78,14 +87,23 @@ public class LineItem {
 		this.totalPrice = totalPrice;
 	}
 
-    @ManyToOne
-    @JoinColumn
-    private Order order;
-//
-    @ManyToOne
-    @JoinColumn
-    private Cart cart;
+	public Order getOrder() {
+		return order;
+	}
 
+	public void setOrder(Order order) {
+		this.order = order;
+	}
+
+	public Cart getCart() {
+		return cart;
+	}
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
+	}
+
+   
     
     // Constructors, getters, and setters
 }

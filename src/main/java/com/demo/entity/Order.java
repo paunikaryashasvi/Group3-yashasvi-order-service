@@ -65,6 +65,14 @@ public class Order {
 		this.orderStatus = orderStatus;
 	}
 
+	public Cart getCart() {
+		return cart;
+	}
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
+	}
+
     // Other order-related fields (if needed)
 
     // Constructors, getters, and setters
