@@ -13,12 +13,16 @@ import java.util.List;
 @RequestMapping("/api/carts")
 public class CartController {
 
-    @Autowired
-    private CartService cartService;
+    private final CartService cartService;
 
-    @PostMapping("/{customerId}")
-    public ResponseEntity<CartDTO> createCart(@PathVariable Long customerId, @RequestBody CartDTO cartDTO) {
-        return cartService.createCart(customerId, cartDTO);
+    @Autowired
+    public CartController(CartService cartService) {
+        this.cartService = cartService;
+    }
+
+    @PostMapping("/{userId}")
+    public ResponseEntity<CartDTO> createCart(@PathVariable Long userId, @RequestBody CartDTO cartDTO) {
+        return cartService.createCart(userId, cartDTO);
     }
 
     @GetMapping("/{cartId}")
@@ -26,9 +30,9 @@ public class CartController {
         return cartService.getCartById(cartId);
     }
 
-    @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<CartDTO>> getCartsByCustomerId(@PathVariable Long customerId) {
-        return cartService.getCartsByCustomerId(customerId);
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<CartDTO>> getCartsByUserId(@PathVariable Long userId) {
+        return cartService.getCartsByUserId(userId);
     }
 
     @GetMapping

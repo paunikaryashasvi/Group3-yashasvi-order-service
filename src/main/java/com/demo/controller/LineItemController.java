@@ -10,39 +10,38 @@ import com.demo.service.LineItemService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/lineitems")
+@RequestMapping("/api/carts")
 public class LineItemController {
 
-    @Autowired
-    private LineItemService lineItemService;
+    private final LineItemService lineItemService;
 
-    @PostMapping("/{cartId}")
+    @Autowired
+    public LineItemController(LineItemService lineItemService) {
+        this.lineItemService = lineItemService;
+    }
+
+    @PostMapping("/{cartId}/line-items")
     public ResponseEntity<LineItemDTO> addLineItem(@PathVariable Long cartId, @RequestBody LineItemDTO lineItemDTO) {
         return lineItemService.addLineItem(cartId, lineItemDTO);
     }
 
-    @GetMapping("/{lineItemId}")
-    public ResponseEntity<LineItemDTO> getLineItemById(@PathVariable Long lineItemId) {
-        return lineItemService.getLineItemById(lineItemId);
+    @DeleteMapping("/{cartId}/line-items/{lineItemId}")
+    public ResponseEntity<Void> removeLineItem(@PathVariable Long cartId, @PathVariable Long lineItemId) {
+        return lineItemService.removeLineItem(cartId, lineItemId);
     }
 
-    @GetMapping("/cart/{cartId}")
+    @GetMapping("/{cartId}/line-items")
     public ResponseEntity<List<LineItemDTO>> getLineItemsByCartId(@PathVariable Long cartId) {
         return lineItemService.getLineItemsByCartId(cartId);
     }
 
-    @GetMapping
-    public ResponseEntity<List<LineItemDTO>> getAllLineItems() {
-        return lineItemService.getAllLineItems();
+    @PutMapping("/{cartId}/line-items/{lineItemId}")
+    public ResponseEntity<LineItemDTO> updateLineItem(@PathVariable Long cartId, @PathVariable Long lineItemId, @RequestBody LineItemDTO lineItemDTO) {
+        return lineItemService.updateLineItem(cartId, lineItemId, lineItemDTO);
     }
 
-    @PutMapping("/{lineItemId}")
-    public ResponseEntity<Void> updateLineItem(@PathVariable Long lineItemId, @RequestBody LineItemDTO lineItemDTO) {
-        return lineItemService.updateLineItem(lineItemId, lineItemDTO);
-    }
-
-    @DeleteMapping("/{lineItemId}")
-    public ResponseEntity<Void> deleteLineItem(@PathVariable Long lineItemId) {
-        return lineItemService.deleteLineItem(lineItemId);
+    @GetMapping("/{cartId}/line-items/{lineItemId}")
+    public ResponseEntity<LineItemDTO> getLineItemById(@PathVariable Long cartId, @PathVariable Long lineItemId) {
+        return lineItemService.getLineItemById(cartId, lineItemId);
     }
 }

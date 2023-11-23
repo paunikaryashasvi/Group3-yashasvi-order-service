@@ -10,13 +10,11 @@ public interface LineItemService {
 
     ResponseEntity<LineItemDTO> addLineItem(Long cartId, LineItemDTO lineItemDTO);
 
-    ResponseEntity<LineItemDTO> getLineItemById(Long lineItemId);
+    ResponseEntity<Void> removeLineItem(Long cartId, Long lineItemId);
 
     ResponseEntity<List<LineItemDTO>> getLineItemsByCartId(Long cartId);
 
-    ResponseEntity<List<LineItemDTO>> getAllLineItems();
+    ResponseEntity<LineItemDTO> updateLineItem(Long cartId, Long lineItemId, LineItemDTO lineItemDTO);
 
-    ResponseEntity<Void> updateLineItem(Long lineItemId, LineItemDTO lineItemDTO);
-
-    ResponseEntity<Void> deleteLineItem(Long lineItemId);
+    ResponseEntity<LineItemDTO> getLineItemById(Long cartId, Long lineItemId);
 }

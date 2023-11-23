@@ -1,8 +1,6 @@
 package com.demo.dto;
 
 public class LineItemDTO {
-
-    private Long id;
     private String productKey;
     private String variantKey;
     private double price;
@@ -10,12 +8,6 @@ public class LineItemDTO {
     private double totalPrice;
 	public LineItemDTO() {
 		super();
-	}
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
 	}
 	public String getProductKey() {
 		return productKey;
@@ -47,8 +39,9 @@ public class LineItemDTO {
 	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
-
     
-    // Constructors, getters, and setters
-}
+	
+    
 
+    // Constructors, getters, setters
+}

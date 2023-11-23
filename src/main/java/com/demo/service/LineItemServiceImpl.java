@@ -13,79 +13,89 @@ import com.demo.repository.CartRepository;
 import com.demo.repository.LineItemRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class LineItemServiceImpl implements LineItemService {
 
-    @Autowired
-    private LineItemRepository lineItemRepository;
+    private final CartRepository cartRepository;
+    private final LineItemRepository lineItemRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    private CartRepository cartRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
+    public LineItemServiceImpl(CartRepository cartRepository, LineItemRepository lineItemRepository, ModelMapper modelMapper) {
+        this.cartRepository = cartRepository;
+        this.lineItemRepository = lineItemRepository;
+        this.modelMapper = modelMapper;
+    }
 
     @Override
     public ResponseEntity<LineItemDTO> addLineItem(Long cartId, LineItemDTO lineItemDTO) {
-        Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new CartNotFoundException("Cart not found with ID: " + cartId));
+        Cart cart = getCartEntityById(cartId);
 
         LineItem lineItem = modelMapper.map(lineItemDTO, LineItem.class);
         lineItem.setCart(cart);
 
-        LineItem savedLineItem = lineItemRepository.save(lineItem);
-        LineItemDTO savedLineItemDTO = modelMapper.map(savedLineItem, LineItemDTO.class);
+        cart.getLineItems().add(lineItem);
+        cart.setTotalPrice(cart.getTotalPrice() + lineItem.getTotalPrice());
 
-        return new ResponseEntity<>(savedLineItemDTO, HttpStatus.CREATED);
+        cartRepository.save(cart);
+
+        LineItemDTO addedLineItemDTO = modelMapper.map(lineItem, LineItemDTO.class);
+        return ResponseEntity.status(HttpStatus.CREATED).body(addedLineItemDTO);
     }
 
     @Override
-    public ResponseEntity<LineItemDTO> getLineItemById(Long lineItemId) {
-        LineItem lineItem = lineItemRepository.findById(lineItemId)
-                .orElseThrow(() -> new LineItemNotFoundException("LineItem not found with ID: " + lineItemId));
+    public ResponseEntity<Void> removeLineItem(Long cartId, Long lineItemId) {
+        Cart cart = getCartEntityById(cartId);
 
-        LineItemDTO lineItemDTO = modelMapper.map(lineItem, LineItemDTO.class);
-        return new ResponseEntity<>(lineItemDTO, HttpStatus.OK);
+        boolean itemRemoved = cart.getLineItems().removeIf(item -> item.getId().equals(lineItemId));
+        if (itemRemoved) {
+            cart.setTotalPrice(cart.getLineItems().stream().mapToDouble(LineItem::getTotalPrice).sum());
+            cartRepository.save(cart);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @Override
     public ResponseEntity<List<LineItemDTO>> getLineItemsByCartId(Long cartId) {
-        Optional<LineItem> lineItems = lineItemRepository.findById(cartId);
-        List<LineItemDTO> lineItemDTOs = lineItems.stream()
-                .map(lineItem -> modelMapper.map(lineItem, LineItemDTO.class))
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(lineItemDTOs, HttpStatus.OK);
+        List<LineItem> lineItems = getCartEntityById(cartId).getLineItems();
+        List<LineItemDTO> lineItemDTOs = lineItems.stream().map(lineItem -> modelMapper.map(lineItem, LineItemDTO.class)).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(lineItemDTOs);
     }
 
     @Override
-    public ResponseEntity<List<LineItemDTO>> getAllLineItems() {
-        List<LineItem> lineItems = lineItemRepository.findAll();
-        List<LineItemDTO> lineItemDTOs = lineItems.stream()
-                .map(lineItem -> modelMapper.map(lineItem, LineItemDTO.class))
-                .collect(Collectors.toList());
+    public ResponseEntity<LineItemDTO> updateLineItem(Long cartId, Long lineItemId, LineItemDTO lineItemDTO) {
+        Cart cart = getCartEntityById(cartId);
 
-        return new ResponseEntity<>(lineItemDTOs, HttpStatus.OK);
-    }
+        LineItem existingLineItem = getLineItemEntityById(lineItemId);
 
-    @Override
-    public ResponseEntity<Void> updateLineItem(Long lineItemId, LineItemDTO lineItemDTO) {
-        LineItem existingLineItem = lineItemRepository.findById(lineItemId)
-                .orElseThrow(() -> new LineItemNotFoundException("LineItem not found with ID: " + lineItemId));
-
-        // Update existingLineItem fields with values from lineItemDTO
+        // Update fields based on your requirements
         modelMapper.map(lineItemDTO, existingLineItem);
 
-        lineItemRepository.save(existingLineItem);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        cart.setTotalPrice(cart.getLineItems().stream().mapToDouble(LineItem::getTotalPrice).sum());
+        cartRepository.save(cart);
+
+        LineItemDTO updatedLineItemDTO = modelMapper.map(existingLineItem, LineItemDTO.class);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedLineItemDTO);
     }
 
     @Override
-    public ResponseEntity<Void> deleteLineItem(Long lineItemId) {
-        lineItemRepository.deleteById(lineItemId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<LineItemDTO> getLineItemById(Long cartId, Long lineItemId) {
+        LineItem lineItem = getLineItemEntityById(lineItemId);
+        LineItemDTO lineItemDTO = modelMapper.map(lineItem, LineItemDTO.class);
+        return ResponseEntity.status(HttpStatus.OK).body(lineItemDTO);
+    }
+
+    private Cart getCartEntityById(Long cartId) {
+        return cartRepository.findById(cartId)
+                .orElseThrow(() -> new RuntimeException("Cart not found with id: " + cartId));
+    }
+
+    private LineItem getLineItemEntityById(Long lineItemId) {
+        return lineItemRepository.findById(lineItemId)
+                .orElseThrow(() -> new RuntimeException("LineItem not found with id: " + lineItemId));
     }
 }

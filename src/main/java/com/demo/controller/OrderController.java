@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.demo.dto.OrderDTO;
-import com.demo.entity.OrderStatus;
 import com.demo.service.OrderService;
 
 import java.util.List;
@@ -14,12 +13,16 @@ import java.util.List;
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    @Autowired
-    private OrderService orderService;
+    private final OrderService orderService;
 
-    @PostMapping
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
-        return orderService.createOrder(orderDTO);
+    @Autowired
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
+    @PostMapping("/{userId}")
+    public ResponseEntity<OrderDTO> createOrder(@PathVariable Long userId, @RequestBody OrderDTO orderDTO) {
+        return orderService.createOrder(userId, orderDTO);
     }
 
     @GetMapping("/{orderId}")
@@ -27,19 +30,19 @@ public class OrderController {
         return orderService.getOrderById(orderId);
     }
 
-//    @GetMapping("/customer/{customerId}")
-//    public ResponseEntity<List<OrderDTO>> getOrdersByCustomerId(@PathVariable Long customerId) {
-//        return orderService.getOrdersByCustomerId(customerId);
-//    }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<OrderDTO>> getOrdersByUserId(@PathVariable Long userId) {
+        return orderService.getOrdersByUserId(userId);
+    }
 
     @GetMapping
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
         return orderService.getAllOrders();
     }
 
-    @PutMapping("/{orderId}/status/{newStatus}")
-    public ResponseEntity<Void> updateOrderStatus(@PathVariable Long orderId, @PathVariable OrderStatus newStatus) {
-        return orderService.updateOrderStatus(orderId, newStatus);
+    @PutMapping("/{orderId}")
+    public ResponseEntity<Void> updateOrder(@PathVariable Long orderId, @RequestBody OrderDTO orderDTO) {
+        return orderService.updateOrder(orderId, orderDTO);
     }
 
     @DeleteMapping("/{orderId}")

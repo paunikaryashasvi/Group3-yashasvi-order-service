@@ -1,50 +1,53 @@
 package com.demo.dto;
 
-import com.demo.entity.OrderStatus;
-import com.demo.entity.PaymentStatus;
+import com.demo.entity.Cart;
 
 public class OrderDTO {
-
-    private Long id;
-    private Long cartId;
+    private Cart cart;
     private double totalPrice;
-    private PaymentStatus paymentStatus;
-    private OrderStatus orderStatus;
+    private String paymentStatus;
+    private String orderStatus;
+    private Long userId;
 	public OrderDTO() {
 		super();
 	}
-	public Long getId() {
-		return id;
+	
+	
+	public Cart getCart() {
+		return cart;
 	}
-	public void setId(Long id) {
-		this.id = id;
+
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
 	}
-	public Long getCartId() {
-		return cartId;
-	}
-	public void setCartId(Long cartId) {
-		this.cartId = cartId;
-	}
+
+
 	public double getTotalPrice() {
 		return totalPrice;
 	}
 	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
-	public PaymentStatus getPaymentStatus() {
+	public String getPaymentStatus() {
 		return paymentStatus;
 	}
-	public void setPaymentStatus(PaymentStatus paymentStatus) {
+	public void setPaymentStatus(String paymentStatus) {
 		this.paymentStatus = paymentStatus;
 	}
-	public OrderStatus getOrderStatus() {
+	public String getOrderStatus() {
 		return orderStatus;
 	}
-	public void setOrderStatus(OrderStatus orderStatus) {
+	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
+	}
+	public Long getUserId() {
+		return userId;
+	}
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
 
     
-    // Constructors, getters, and setters
+    // Constructors, getters, setters
 }
-

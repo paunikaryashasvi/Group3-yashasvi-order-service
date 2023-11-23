@@ -1,18 +1,18 @@
 package com.demo.service;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 
 import com.demo.dto.CartDTO;
-
-import java.util.List;
+import com.demo.dto.LineItemDTO;
 
 public interface CartService {
-
-    ResponseEntity<CartDTO> createCart(Long customerId, CartDTO cartDTO);
+	ResponseEntity<CartDTO> createCart(Long customerId, CartDTO cartDTO);
 
     ResponseEntity<CartDTO> getCartById(Long cartId);
 
-    ResponseEntity<List<CartDTO>> getCartsByCustomerId(Long customerId);
+    ResponseEntity<List<CartDTO>> getCartsByUserId(Long customerId);
 
     ResponseEntity<List<CartDTO>> getAllCarts();
 
@@ -20,3 +20,4 @@ public interface CartService {
 
     ResponseEntity<Void> deleteCart(Long cartId);
 }
+
