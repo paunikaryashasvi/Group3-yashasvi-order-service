@@ -1,5 +1,6 @@
 package com.demo.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,7 +15,7 @@ public class Order {
  @GeneratedValue(strategy = GenerationType.IDENTITY)
  private Long id;
 
- @OneToOne
+ @OneToOne(cascade = CascadeType.ALL)
  @JoinColumn
  private Cart cart;
 

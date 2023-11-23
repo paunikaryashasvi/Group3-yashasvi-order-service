@@ -5,6 +5,7 @@ import java.sql.Date;
 import com.demo.entity.CartStatus;
 
 public class CartDTO {
+	private Long id;
     private String key;
     private Long userId;
     private Date date;
@@ -14,6 +15,18 @@ public class CartDTO {
 	public CartDTO() {
 		super();
 	}
+	
+	
+	public Long getId() {
+		return id;
+	}
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
 	public String getKey() {
 		return key;
 	}

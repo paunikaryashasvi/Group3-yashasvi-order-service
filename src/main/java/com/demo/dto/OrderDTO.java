@@ -7,20 +7,26 @@ public class OrderDTO {
     private double totalPrice;
     private String paymentStatus;
     private String orderStatus;
-    private Long userId;
+   
 	public OrderDTO() {
 		super();
 	}
 	
 	
+	
+
 	public Cart getCart() {
 		return cart;
 	}
 
 
+
+
 	public void setCart(Cart cart) {
 		this.cart = cart;
 	}
+
+
 
 
 	public double getTotalPrice() {
@@ -41,12 +47,7 @@ public class OrderDTO {
 	public void setOrderStatus(String orderStatus) {
 		this.orderStatus = orderStatus;
 	}
-	public Long getUserId() {
-		return userId;
-	}
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+	
 
     
     // Constructors, getters, setters

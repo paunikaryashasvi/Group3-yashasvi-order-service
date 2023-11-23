@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.demo.dto.CartDTO;
 import com.demo.dto.LineItemDTO;
+import com.demo.dto.UserDTO;
 import com.demo.entity.Cart;
 import com.demo.entity.CartStatus;
 import com.demo.entity.LineItem;
@@ -28,16 +29,20 @@ public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
     private final ModelMapper modelMapper;
+    private final UserApiClient userApiClient;
 
     @Autowired
-    public CartServiceImpl(CartRepository cartRepository, ModelMapper modelMapper) {
+    public CartServiceImpl(CartRepository cartRepository, ModelMapper modelMapper, UserApiClient userApiClient) {
         this.cartRepository = cartRepository;
         this.modelMapper = modelMapper;
+        this.userApiClient = userApiClient;
     }
 
     @Override
     public ResponseEntity<CartDTO> createCart(Long userId, CartDTO cartDTO) {
-        Cart cart = modelMapper.map(cartDTO, Cart.class);
+        
+    	
+    	Cart cart = modelMapper.map(cartDTO, Cart.class);
         cart.setUserId(userId);
         cartRepository.save(cart);
 
@@ -54,9 +59,22 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public ResponseEntity<List<CartDTO>> getCartsByUserId(Long userId) {
-        List<Cart> carts = cartRepository.findByUserId(userId);
+       
+       
+        ResponseEntity<UserDTO> userResponse = userApiClient.getUserById(userId);
+
+        if (userResponse.getStatusCode().is2xxSuccessful() && userResponse.getBody() != null) {
+            UserDTO userDTO = userResponse.getBody();
+            
+            List<Cart> carts = cartRepository.findByUserId(userId);
+            
         List<CartDTO> cartDTOs = carts.stream().map(cart -> modelMapper.map(cart, CartDTO.class)).collect(Collectors.toList());
-        return ResponseEntity.status(HttpStatus.OK).body(cartDTOs);
+        
+        return ResponseEntity.status(HttpStatus.OK).body(cartDTOs);}
+        else {
+            // Handle user not found or other error scenarios
+            return ResponseEntity.status(userResponse.getStatusCode()).build();
+        }
     }
 
     @Override

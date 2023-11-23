@@ -29,7 +29,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<OrderDTO> createOrder(Long userId, OrderDTO orderDTO) {
         Order order = modelMapper.map(orderDTO, Order.class);
-        order.setId(userId);
         orderRepository.save(order);
 
         OrderDTO createdOrderDTO = modelMapper.map(order, OrderDTO.class);
