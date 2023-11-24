@@ -23,7 +23,7 @@ public class Order {
 
  private String paymentStatus;
 
- private String orderStatus;
+ private OrderStatus orderStatus;
 
 public Order() {
 	super();
@@ -63,13 +63,15 @@ public void setPaymentStatus(String paymentStatus) {
 	this.paymentStatus = paymentStatus;
 }
 
-public String getOrderStatus() {
+public OrderStatus getOrderStatus() {
 	return orderStatus;
 }
 
-public void setOrderStatus(String orderStatus) {
+public void setOrderStatus(OrderStatus orderStatus) {
 	this.orderStatus = orderStatus;
 }
+
+
 
  // Constructors, getters, setters
 }

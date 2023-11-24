@@ -41,13 +41,21 @@ public class CartServiceImpl implements CartService {
     @Override
     public ResponseEntity<CartDTO> createCart(Long userId, CartDTO cartDTO) {
         
+    	ResponseEntity<UserDTO> userResponse = userApiClient.getUserById(userId);
+
+        if (userResponse.getStatusCode().is2xxSuccessful() && userResponse.getBody() != null) {
+            UserDTO userDTO = userResponse.getBody();
     	
     	Cart cart = modelMapper.map(cartDTO, Cart.class);
         cart.setUserId(userId);
         cartRepository.save(cart);
 
         CartDTO createdCartDTO = modelMapper.map(cart, CartDTO.class);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdCartDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCartDTO);}
+        else {
+            // Handle user not found or other error scenarios
+            return ResponseEntity.status(userResponse.getStatusCode()).build();
+        }
     }
 
     @Override

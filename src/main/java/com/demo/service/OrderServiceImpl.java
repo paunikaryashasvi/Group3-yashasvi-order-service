@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.demo.dto.OrderDTO;
 import com.demo.entity.Order;
+import com.demo.entity.OrderStatus;
 import com.demo.repository.OrderRepository;
 
 import java.util.List;
@@ -19,20 +20,33 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final ModelMapper modelMapper;
+    private final PaymentApiClient paymentApiClient;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, ModelMapper modelMapper) {
+    public OrderServiceImpl(OrderRepository orderRepository, ModelMapper modelMapper, PaymentApiClient paymentApiClient) {
         this.orderRepository = orderRepository;
         this.modelMapper = modelMapper;
+        this.paymentApiClient = paymentApiClient;
     }
 
     @Override
     public ResponseEntity<OrderDTO> createOrder(Long userId, OrderDTO orderDTO) {
         Order order = modelMapper.map(orderDTO, Order.class);
-        orderRepository.save(order);
+        
 
+        ResponseEntity<Void> paymentResponse = paymentApiClient.processPayment(orderDTO.getId(), null);
+
+        if (paymentResponse.getStatusCode().is2xxSuccessful()) {
+            // Payment successful, update order status or perform other actions
+            order.setOrderStatus(OrderStatus.CONFIRMED);
+            orderRepository.save(order);
+        
         OrderDTO createdOrderDTO = modelMapper.map(order, OrderDTO.class);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdOrderDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdOrderDTO);}
+        else {
+            // Handle payment failure
+            return ResponseEntity.status(paymentResponse.getStatusCode()).build();
+        }
     }
 
     @Override
