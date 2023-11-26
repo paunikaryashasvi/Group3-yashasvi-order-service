@@ -1,17 +1,28 @@
 package com.demo.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 import com.demo.entity.CartStatus;
+import com.demo.entity.LineItem;
+
+import io.micrometer.common.lang.NonNull;
+import jakarta.validation.constraints.Size;
 
 public class CartDTO {
 	private Long id;
+	
+	@NonNull
     private String key;
+	
+	@Size(min = 3)
     private Long userId;
+	
     private Date date;
     private double totalPrice;
     private String currency;
     private CartStatus cartStatus;
+    private List<LineItem> lineItems;
 	public CartDTO() {
 		super();
 	}
@@ -62,6 +73,16 @@ public class CartDTO {
 	}
 	public void setCartStatus(CartStatus cartStatus) {
 		this.cartStatus = cartStatus;
+	}
+
+
+	public List<LineItem> getLineItems() {
+		return lineItems;
+	}
+
+
+	public void setLineItems(List<LineItem> lineItems) {
+		this.lineItems = lineItems;
 	}
 	
     

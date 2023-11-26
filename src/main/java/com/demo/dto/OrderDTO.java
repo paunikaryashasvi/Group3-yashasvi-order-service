@@ -4,6 +4,8 @@ import com.demo.entity.Cart;
 import com.demo.entity.OrderStatus;
 
 public class OrderDTO {
+	
+	
 	private Long id;
     private Cart cart;
     private double totalPrice;
@@ -14,14 +16,10 @@ public class OrderDTO {
 		super();
 	}
 	
-	
-	
 
 	public Cart getCart() {
 		return cart;
 	}
-
-
 
 
 	public void setCart(Cart cart) {
@@ -76,10 +74,10 @@ public class OrderDTO {
 
 
 
-	public Long getPayment() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	public Long getPayment() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 	
 
     
