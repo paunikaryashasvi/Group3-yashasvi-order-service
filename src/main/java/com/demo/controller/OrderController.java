@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.demo.dto.OrderDTO;
+import com.demo.exceptions.ResourceNotFoundException;
 import com.demo.service.OrderService;
 
 import java.util.List;
@@ -26,12 +27,12 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long orderId) {
+    public ResponseEntity<OrderDTO> getOrderById(@PathVariable Long orderId)throws ResourceNotFoundException {
         return orderService.getOrderById(orderId);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<OrderDTO>> getOrdersByUserId(@PathVariable Long userId) {
+    public ResponseEntity<List<OrderDTO>> getOrdersByUserId(@PathVariable Long userId) throws ResourceNotFoundException {
         return orderService.getOrdersByUserId(userId);
     }
 

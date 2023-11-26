@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.demo.dto.LineItemDTO;
+import com.demo.exceptions.ResourceNotFoundException;
 import com.demo.service.LineItemService;
 
 import java.util.List;
@@ -26,12 +27,12 @@ public class LineItemController {
     }
 
     @DeleteMapping("/{cartId}/line-items/{lineItemId}")
-    public ResponseEntity<Void> removeLineItem(@PathVariable Long cartId, @PathVariable Long lineItemId) {
+    public ResponseEntity<Void> removeLineItem(@PathVariable Long cartId, @PathVariable Long lineItemId)throws ResourceNotFoundException {
         return lineItemService.removeLineItem(cartId, lineItemId);
     }
 
     @GetMapping("/{cartId}/line-items")
-    public ResponseEntity<List<LineItemDTO>> getLineItemsByCartId(@PathVariable Long cartId) {
+    public ResponseEntity<List<LineItemDTO>> getLineItemsByCartId(@PathVariable Long cartId) throws ResourceNotFoundException {
         return lineItemService.getLineItemsByCartId(cartId);
     }
 

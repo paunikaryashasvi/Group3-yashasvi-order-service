@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.demo.dto.CartDTO;
+import com.demo.exceptions.ResourceNotFoundException;
 import com.demo.service.CartService;
 
 import java.util.List;
@@ -26,12 +27,12 @@ public class CartController {
     }
 
     @GetMapping("/{cartId}")
-    public ResponseEntity<CartDTO> getCartById(@PathVariable Long cartId) {
+    public ResponseEntity<CartDTO> getCartById(@PathVariable Long cartId)throws ResourceNotFoundException {
         return cartService.getCartById(cartId);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<CartDTO>> getCartsByUserId(@PathVariable Long userId) {
+    public ResponseEntity<List<CartDTO>> getCartsByUserId(@PathVariable Long userId) throws ResourceNotFoundException {
         return cartService.getCartsByUserId(userId);
     }
 
